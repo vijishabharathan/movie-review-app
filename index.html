@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Review App</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            margin: 0; padding: 0;
+            background-color: #0f0c29;
+            color: white; font-family: 'Poppins', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .header-section {
+            width: 100%; background-color: #1a1a2e;
+            padding: 20px 0; display: flex; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100;
+        }
+        .search-container { display: flex; gap: 10px; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 50px; }
+        input { width: 350px; padding: 10px 15px; border-radius: 25px; border: none; outline: none; font-size: 15px; }
+        button { padding: 10px 20px; border-radius: 25px; border: none; background: #e91e63; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #ff4081; transform: scale(1.05); }
+        
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; width: 90%; margin-top: 25px; padding-bottom: 50px; }
+        .movie-card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 10px; text-align: center; text-decoration: none; color: white; transition: 0.3s; }
+        .movie-card:hover { transform: translateY(-8px); background: rgba(255,255,255,0.1); }
+        .movie-card img { width: 100%; border-radius: 8px; }
+        h4 { margin: 10px 0 5px 0; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <form method="POST">
+            <div class="search-container">
+                <input type="text" name="search_query" placeholder="Search for a movie..." required>
+                <button type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="movie-grid">
+        {% for movie in movies %}
+        <a href="{{ url_for('movie_details', movie_id=movie.id) }}" class="movie-card">
+            <img src="https://image.tmdb.org/t/p/w200{{ movie.poster_path }}" onerror="this.src='https://via.placeholder.com/200x300?text=No+Image'">
+            <h4>{{ movie.title }}</h4>
+            <p style="font-size: 0.8rem; color: #f1c40f;">⭐ {{ movie.vote_average }}</p>
+        </a>
+        {% endfor %}
+    </div>
+</body>
+</html>

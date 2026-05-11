@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }} - Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body { background: #0a0a0a; color: white; font-family: 'Poppins', sans-serif; padding: 20px; margin: 0; }
+        .container { max-width: 1100px; margin: 40px auto; display: flex; flex-wrap: wrap; gap: 30px; background: #16213e; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .poster { width: 350px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .info { flex: 1; min-width: 300px; }
+        .genre-badge { display: inline-block; background: #e91e63; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; margin-right: 5px; margin-bottom: 10px; }
+        .rating { font-size: 1.4rem; color: #f1c40f; font-weight: bold; margin: 10px 0; }
+        
+        .cast-section { margin-top: 30px; }
+        .cast-grid { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; }
+        .cast-card { min-width: 100px; text-align: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; }
+        .cast-card img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+        .cast-card p { font-size: 0.7rem; margin: 2px 0; }
+
+        .trailer-box { margin-top: 30px; border-radius: 15px; overflow: hidden; border: 1px solid #333; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #e91e63; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1100px; margin: auto;">
+        <a href="/" class="back-link">← Back to Search</a>
+    </div>
+
+    <div class="container">
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" class="poster" onerror="this.src='https://via.placeholder.com/350x500?text=No+Poster'">
+        
+        <div class="info">
+            <h1>{{ movie.title }}</h1>
+            
+            <div class="genres">
+                {% for genre in movie.genres %}
+                    <span class="genre-badge">{{ genre.name }}</span>
+                {% endfor %}
+            </div>
+
+            <p class="rating">⭐ {{ movie.vote_average if movie.vote_average > 0 else 'Not Rated' }}</p>
+            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+            
+            <p><strong>Budget:</strong> {{ "${:,.0f}".format(movie.budget) if movie.budget > 0 else 'N/A' }}</p>
+            <p><strong>Revenue:</strong> {{ "${:,.0f}".format(movie.revenue) if movie.revenue > 0 else 'N/A' }}</p>
+            
+            <p><strong>Overview:</strong><br>{{ movie.overview }}</p>
+
+            <div class="cast-section">
+                <h3>Top Cast</h3>
+                <div class="cast-grid">
+                    {% for actor in movie.credits.cast[:10] %}
+                    <div class="cast-card">
+                        {% if actor.profile_path %}
+                            <img src="https://image.tmdb.org/t/p/w200{{ actor.profile_path }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/80x80?text=No+Photo">
+                        {% endif %}
+                        <p><strong>{{ actor.name }}</strong></p>
+                        <p style="color: #bbb;">{{ actor.character }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <h3>Trailer</h3>
+            <div class="trailer-box">
+                {% if trailer %}
+                    <iframe width="100%" height="350" src="https://www.youtube.com/embed/{{ trailer }}" frameborder="0" allowfullscreen></iframe>
+                {% else %}
+                    <p style="padding: 20px;">Trailer not available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
